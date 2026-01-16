@@ -1912,8 +1912,12 @@ if __name__ == '__main__':
     start_all_monitoring()
     
     # Port'u environment variable'dan al (deploy için)
+    # Railway otomatik port atar, PORT env var'ını kullan
     port = int(os.getenv('PORT', 5001))
-    host = os.getenv('HOST', '127.0.0.1')
-    debug = os.getenv('DEBUG', 'True').lower() == 'true'
+    # Railway için 0.0.0.0 kullan (tüm interface'lere dinle)
+    host = os.getenv('HOST', '0.0.0.0')
+    # Production'da debug kapalı olmalı
+    debug = os.getenv('DEBUG', 'False').lower() == 'true'
     
+    print(f"🌐 Server başlatılıyor: {host}:{port} (Debug: {debug})")
     app.run(debug=debug, host=host, port=port, use_reloader=False)
