@@ -1,0 +1,372 @@
+.app {
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  padding: 20px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.actions {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success {
+  background: #2196F3;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #0b7dda;
+}
+
+.btn-secondary {
+  background: #757575;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #616161;
+}
+
+.btn-danger {
+  background: #f44336;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #da190b;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.urunler-listesi {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.urunler-listesi h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.urun-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.urun-kart {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.urun-kart:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.urun-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 15px;
+}
+
+.urun-header h3 {
+  color: #333;
+  font-size: 1.2rem;
+  flex: 1;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background: #4CAF50;
+  color: white;
+}
+
+.badge-info {
+  background: #2196F3;
+  color: white;
+}
+
+.urun-body {
+  margin-bottom: 15px;
+}
+
+.urun-info p {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.stok-durumu {
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.stok-durumu.stok-var {
+  background: #4CAF50;
+  color: white;
+}
+
+.stok-durumu.stok-az {
+  background: #FF9800;
+  color: white;
+}
+
+.stok-durumu.stok-yok {
+  background: #f44336;
+  color: white;
+}
+
+.stok-durumu.stok-hata {
+  background: #ff9800;
+  color: white;
+}
+
+.stok-durumu.stok-bilinmiyor {
+  background: #9e9e9e;
+  color: white;
+}
+
+.urun-url a {
+  color: #2196F3;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.urun-url a:hover {
+  text-decoration: underline;
+}
+
+.kontrol-tarihi {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 8px;
+}
+
+.form-help {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.info-box {
+  background: #e3f2fd;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  border-left: 4px solid #2196F3;
+}
+
+.info-box h3 {
+  margin-bottom: 15px;
+  color: #1976d2;
+}
+
+.info-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-box li {
+  padding: 8px 0;
+  color: #555;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+.user-info span {
+  color: white;
+  font-weight: 500;
+}
+
+.stok-kontrol {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.stok-kontrol label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+.stok-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.stok-input-group input {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.stok-input-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.urun-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.urun-tarih {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #999;
+  text-align: right;
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  padding: 50px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .urun-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+  }
+}
