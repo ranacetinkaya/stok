@@ -11,7 +11,6 @@ ENV/
 *.db
 *.sqlite
 *.sqlite3
-stok.db
 
 # Node
 node_modules/
@@ -21,18 +20,9 @@ build/
 
 # Environment
 .env
-.env.local
-.env.production
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Selenium
-chromedriver
-geckodriver
-
-# Logs
-*.log

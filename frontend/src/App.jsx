@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
 
-// API Base URL - Production için environment variable'dan al
-// PythonAnywhere için: https://ranacetinkaya.pythonanywhere.com
-// Vercel'de environment variable: VITE_API_URL=https://ranacetinkaya.pythonanywhere.com
-const API = import.meta.env.VITE_API_URL || 'https://ranacetinkaya.pythonanywhere.com'
+const API_URL = 'http://localhost:5001/api'
 
 function App() {
   const [kullanici, setKullanici] = useState(null)
@@ -40,7 +37,7 @@ function App() {
 
   const fetchKullanici = async (id) => {
     try {
-      const response = await axios.get(`${API}/api/kullanicilar/${id}`)
+      const response = await axios.get(`${API_URL}/kullanicilar/${id}`)
       if (response.data.success) {
         setKullanici(response.data)
         setEmailAyarlari({
@@ -59,7 +56,7 @@ function App() {
     if (!kullaniciId) return
     
     try {
-      const response = await axios.get(`${API}/api/urunler?kullanici_id=${kullaniciId}`)
+      const response = await axios.get(`${API_URL}/urunler?kullanici_id=${kullaniciId}`)
       setUrunler(response.data)
       setLoading(false)
     } catch (error) {
@@ -76,7 +73,7 @@ function App() {
     }
 
     try {
-      const response = await axios.post(`${API}/api/kullanicilar`, {
+      const response = await axios.post(`${API_URL}/kullanicilar`, {
         email: email.trim().toLowerCase(),
         isim: isim.trim()
       })
@@ -101,7 +98,7 @@ function App() {
     if (!kullaniciId) return
 
     try {
-      const response = await axios.put(`${API}/api/kullanicilar/${kullaniciId}/email-ayarlari`, emailAyarlari)
+      const response = await axios.put(`${API_URL}/kullanicilar/${kullaniciId}/email-ayarlari`, emailAyarlari)
       if (response.data.success) {
         alert('✅ Email ayarları kaydedildi! Artık stok geldiğinde bildirim alacaksınız.')
         setShowEmailAyarlari(false)
@@ -126,7 +123,7 @@ function App() {
 
     setAdding(true)
     try {
-      const response = await axios.post(`${API}/api/urunler`, {
+      const response = await axios.post(`${API_URL}/urunler`, {
         urun_url: urunUrl,
         kullanici_id: kullaniciId,
         takip_edilen_beden: takipEdilenBeden.trim() || null
@@ -161,7 +158,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm('Bu ürünü takip listesinden çıkarmak istediğinize emin misiniz?')) {
       try {
-        const response = await axios.delete(`${API}/api/urunler/${id}?kullanici_id=${kullaniciId}`)
+        const response = await axios.delete(`${API_URL}/urunler/${id}?kullanici_id=${kullaniciId}`)
         if (response.data.success) {
           alert('✅ Ürün başarıyla silindi ve veritabanından kaldırıldı')
           fetchUrunler(kullaniciId)
@@ -176,7 +173,7 @@ function App() {
 
   const handleManualCheck = async (id) => {
     try {
-      const response = await axios.post(`${API}/api/stok-kontrol`, { 
+      const response = await axios.post(`${API_URL}/stok-kontrol`, { 
         urun_id: id,
         kullanici_id: kullaniciId
       })
@@ -190,7 +187,7 @@ function App() {
   const handleCheckAll = async () => {
     if (window.confirm('Tüm ürünlerin stok durumunu kontrol etmek istediğinize emin misiniz?')) {
       try {
-        await axios.post(`${API}/api/stok-kontrol`, {
+        await axios.post(`${API_URL}/stok-kontrol`, {
           kullanici_id: kullaniciId
         })
         alert('Tüm ürünler kontrol edildi! Sonuçlar güncelleniyor...')

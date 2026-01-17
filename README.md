@@ -1,73 +1,147 @@
 # 🛍️ Bershka Otomatik Stok Takip Sistemi
 
-Multi-user Bershka stok takip uygulaması. Ürünlerin stok durumunu otomatik kontrol eder ve stok geldiğinde anında email bildirimi gönderir.
+Bershka web sitesinden ürünlerin stok durumunu **otomatik olarak** kontrol eden ve stok geldiğinde **otomatik bildirim** gönderen sistem.
 
 ## ✨ Özellikler
 
-- ✅ **Multi-User Desteği**: Her kullanıcının kendi oturumu, ürün listesi ve email ayarları
-- ✅ **Anında Bildirim**: Stok geldiğinde 5 saniye içinde email bildirimi
-- ✅ **Beden Takibi**: Belirli bedenlerin stok durumunu takip edebilirsiniz
-- ✅ **7/24 Çalışır**: Deploy edildiğinde sürekli çalışır
-- ✅ **Otomatik Kontrol**: Her 5 saniyede bir otomatik stok kontrolü
+- ✅ **Otomatik Stok Kontrolü**: Her 30 dakikada bir tüm ürünler kontrol edilir
+- ✅ **Web Scraping**: Bershka sitesinden stok durumu otomatik çekilir
+- ✅ **Email Bildirimi**: Stok geldiğinde otomatik email gönderilir
+- ✅ **Manuel Kontrol**: İstediğiniz zaman manuel kontrol yapabilirsiniz
+- ✅ **Kolay Kullanım**: Sadece ürün URL'si ekleyin, gerisini sistem halleder
 
-## 🚀 Hızlı Başlangıç
+## 🎯 Nasıl Çalışır?
 
-### Local Development
+1. **Ürün URL'si Ekleyin**: Bershka'dan beğendiğiniz ürünün URL'sini ekleyin
+2. **Otomatik Kontrol**: Sistem her 30 dakikada bir stok durumunu kontrol eder
+3. **Otomatik Bildirim**: Stok geldiğinde size email gönderilir
+4. **Manuel Kontrol**: İstediğiniz zaman "Şimdi Kontrol Et" butonuna tıklayın
 
-#### Backend
+## 🚀 Kurulum
+
+### 1. Backend Kurulumu
+
 ```bash
 cd backend
+
+# Python sanal ortamı oluşturun
 python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate
+
+# Gerekli paketleri yükleyin
 pip install -r requirements.txt
-python app.py
+
+# Email bildirimleri için .env dosyası oluşturun
+cp ../env.example .env
+# .env dosyasını düzenleyip email bilgilerinizi girin
 ```
 
-#### Frontend
+### 2. Frontend Kurulumu
+
 ```bash
 cd frontend
 npm install
+```
+
+## 📧 Email Bildirimi Ayarları
+
+1. `env.example` dosyasını `.env` olarak kopyalayın (backend klasöründe)
+2. Email bilgilerinizi girin:
+
+```env
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+RECIPIENT_EMAIL=your-email@gmail.com
+```
+
+### Gmail için Özel Ayarlar
+
+Gmail kullanıyorsanız, normal şifreniz yerine **Uygulama Şifresi** kullanmanız gerekiyor:
+
+1. Google Hesabınız > Güvenlik
+2. 2 Adımlı Doğrulama'yı etkinleştirin
+3. Uygulama Şifreleri bölümünden yeni bir şifre oluşturun
+4. Bu şifreyi `EMAIL_PASSWORD` olarak kullanın
+
+## 🎯 Kullanım
+
+### Backend'i Başlatın
+
+```bash
+cd backend
+source venv/bin/activate
+python app.py
+```
+
+Backend `http://localhost:5000` adresinde çalışacak ve her 30 dakikada bir otomatik stok kontrolü yapacak.
+
+### Frontend'i Başlatın
+
+```bash
+cd frontend
 npm run dev
 ```
 
-### Deploy
+Frontend `http://localhost:3000` adresinde açılacak.
 
-Detaylı deploy rehberi için:
-- **Vercel + Railway**: [VERCEL-DEPLOY.md](./VERCEL-DEPLOY.md)
-- **Genel Deploy**: [DEPLOY.md](./DEPLOY.md)
+## 📱 Kullanım Adımları
 
-## 📋 Kullanım
+1. **Ürün URL'si Bulun**:
+   - Bershka web sitesine gidin
+   - Beğendiğiniz ürünün sayfasına gidin
+   - Tarayıcı adres çubuğundaki URL'yi kopyalayın
+   - Örnek: `https://www.bershka.com/tr/urun/elbise-c1234567890p.html`
 
-1. **Kayıt Ol / Giriş Yap**: Email adresinizle kayıt olun
-2. **Email Ayarları**: Email bildirimleri için SMTP ayarlarınızı yapın
-3. **Ürün Ekle**: Bershka ürün URL'sini ekleyin
-4. **Beden Seç**: İsterseniz belirli bir beden takip edin
-5. **Bekle**: Stok geldiğinde otomatik email alacaksınız!
+2. **URL'yi Ekleyin**:
+   - Uygulamada "➕ Yeni Ürün Ekle" butonuna tıklayın
+   - URL'yi yapıştırın
+   - "Ekle ve Kontrol Et" butonuna tıklayın
 
-## 🛠️ Teknolojiler
+3. **Otomatik Takip**:
+   - Sistem her 30 dakikada bir kontrol eder
+   - Stok durumu otomatik güncellenir
+   - Stok geldiğinde email bildirimi alırsınız
 
-- **Backend**: Python, Flask, SQLite, Selenium
-- **Frontend**: React, Vite, Axios
-- **Deploy**: Vercel (Frontend), Railway (Backend)
+4. **Manuel Kontrol** (İsteğe Bağlı):
+   - Ürün kartında "🔍 Şimdi Kontrol Et" butonuna tıklayın
+   - Veya "🔍 Tümünü Kontrol Et" ile tüm ürünleri kontrol edin
 
-## 📧 Email Ayarları
+## 🔧 Teknik Detaylar
 
-Gmail kullanıyorsanız:
-1. Google Hesabınız → Güvenlik
-2. 2 Adımlı Doğrulama → Açık olmalı
-3. Uygulama Şifreleri → Yeni şifre oluştur
-4. Bu şifreyi email ayarlarında kullanın
+- **Web Scraping**: BeautifulSoup ve Requests kullanılarak Bershka sitesi kontrol edilir
+- **Periyodik Kontrol**: APScheduler ile her 30 dakikada bir otomatik kontrol
+- **Stok Tespiti**: Farklı yöntemlerle stok durumu tespit edilir:
+  - "Add to bag" butonu kontrolü
+  - "Out of stock" mesajı kontrolü
+  - Beden seçenekleri kontrolü
+  - JSON-LD structured data kontrolü
+  - Stok durumu class/id kontrolü
 
-## 🔒 Güvenlik
+## ⚠️ Önemli Notlar
 
-- Her kullanıcı sadece kendi verilerini görür
-- Email şifreleri güvenli şekilde saklanır
-- CORS ayarları production için yapılandırılmıştır
+- Sistem Bershka'nın web sitesini periyodik olarak kontrol eder
+- Bershka sitesinin yapısı değişirse scraping mantığı güncellenebilir
+- Rate limiting için ürünler arasında 2 saniye bekleme yapılır
+- Email bildirimi her ürün için sadece bir kez gönderilir (stok 0'dan büyük değere çıktığında)
 
-## 📝 Lisans
+## 🐛 Sorun Giderme
 
-Bu proje kişisel kullanım içindir.
+**Stok durumu "Kontrol Edilemedi" gösteriyor:**
+- URL'nin doğru olduğundan emin olun
+- Bershka sitesine erişim olup olmadığını kontrol edin
+- Manuel kontrol butonunu deneyin
 
-## 🤝 Katkıda Bulunma
+**Email bildirimi gelmiyor:**
+- `.env` dosyasının doğru yapılandırıldığından emin olun
+- Gmail kullanıyorsanız Uygulama Şifresi kullandığınızdan emin olun
+- Backend loglarını kontrol edin
 
-Sorun bildirmek veya öneride bulunmak için GitHub Issues kullanın.
+**Otomatik kontrol çalışmıyor:**
+- Backend'in çalıştığından emin olun
+- Backend loglarında "Stok kontrolü başlatılıyor..." mesajını kontrol edin
+
+## 📄 Lisans
+
+Bu proje kişisel kullanım için geliştirilmiştir.

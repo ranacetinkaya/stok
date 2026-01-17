@@ -14,19 +14,15 @@ import time
 import re
 
 app = Flask(__name__)
-# CORS ayarları - Production için tüm origin'lere izin ver (multi-user için gerekli)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app)
 
 # Scheduler başlatma
 scheduler = BackgroundScheduler()
 scheduler.start()
 
-# Database path - Production için environment variable'dan al
-DATABASE_PATH = os.getenv('DATABASE_PATH', 'stok.db')
-
 # Veritabanı başlatma
 def init_db():
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect('stok.db')
     c = conn.cursor()
     
     # Kullanıcılar tablosu
@@ -381,10 +377,6 @@ def check_bershka_stock_selenium(product_url, beden=None):
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
         chrome_options.add_argument('--disable-gpu')
-        # Railway/Production için ek ayarlar
-        chrome_options.add_argument('--disable-software-rasterizer')
-        chrome_options.add_argument('--remote-debugging-port=9222')
-        chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')  # Railway için
         chrome_options.add_argument('--window-size=1920,1080')
         chrome_options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -1198,7 +1190,7 @@ def send_email_notification(urun_adi, urun_url, kullanici_id=None):
     """Stok geldiğinde email bildirimi gönder"""
     # Kullanıcı ID varsa, kullanıcının email ayarlarını kullan
     if kullanici_id:
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         c.execute('SELECT email, smtp_server, smtp_port, email_user, email_password FROM kullanicilar WHERE id = ?', (kullanici_id,))
         kullanici = c.fetchone()
@@ -1278,7 +1270,7 @@ def check_single_product_continuous(urun_id, urun_url, urun_adi, kullanici_id=No
     while True:
         try:
             # Veritabanından güncel durumu al
-            conn = sqlite3.connect(DATABASE_PATH)
+            conn = sqlite3.connect('stok.db')
             c = conn.cursor()
             c.execute('SELECT stok_durumu, bildirim_gonderildi, kullanici_id, takip_edilen_beden FROM urunler WHERE id = ?', (urun_id,))
             result = c.fetchone()
@@ -1305,7 +1297,7 @@ def check_single_product_continuous(urun_id, urun_url, urun_adi, kullanici_id=No
                 guncel_urun_adi = check_result.get('urun_adi', urun_adi)
                 
                 # Veritabanını güncelle
-                conn = sqlite3.connect(DATABASE_PATH)
+                conn = sqlite3.connect('stok.db')
                 c = conn.cursor()
                 now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 
@@ -1397,7 +1389,7 @@ def stop_product_monitoring(urun_id):
 
 def start_all_monitoring():
     """Tüm ürünler için sürekli kontrol başlatır"""
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect('stok.db')
     c = conn.cursor()
     c.execute('SELECT id, urun_url, urun_adi, kullanici_id, takip_edilen_beden FROM urunler')
     urunler = c.fetchall()
@@ -1413,7 +1405,7 @@ def check_all_products():
     """Tüm ürünlerin stok durumunu kontrol eder (manuel kontrol için)"""
     print(f"🔍 Manuel stok kontrolü başlatılıyor... {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect('stok.db')
     c = conn.cursor()
     c.execute('SELECT id, urun_url, urun_adi, stok_durumu, bildirim_gonderildi FROM urunler')
     urunler = c.fetchall()
@@ -1431,7 +1423,7 @@ def check_all_products():
             guncel_urun_adi = result['urun_adi']
             
             # Veritabanını güncelle
-            conn = sqlite3.connect(DATABASE_PATH)
+            conn = sqlite3.connect('stok.db')
             c = conn.cursor()
             now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
@@ -1493,7 +1485,7 @@ def kayit_ol():
         if not email:
             return jsonify({'success': False, 'error': 'Email gerekli'}), 400
         
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
@@ -1513,7 +1505,7 @@ def kayit_ol():
         except sqlite3.IntegrityError:
             conn.close()
             # Kullanıcı zaten varsa, ID'sini döndür
-            c = sqlite3.connect(DATABASE_PATH).cursor()
+            c = sqlite3.connect('stok.db').cursor()
             c.execute('SELECT id, email, isim FROM kullanicilar WHERE email = ?', (email,))
             kullanici = c.fetchone()
             if kullanici:
@@ -1533,7 +1525,7 @@ def email_ayarlari_guncelle(kullanici_id):
     """Kullanıcının email ayarlarını güncelle"""
     try:
         data = request.json
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         
         c.execute('''UPDATE kullanicilar 
@@ -1554,7 +1546,7 @@ def email_ayarlari_guncelle(kullanici_id):
 @app.route('/api/kullanicilar/<int:kullanici_id>', methods=['GET'])
 def get_kullanici(kullanici_id):
     """Kullanıcı bilgilerini getir"""
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect('stok.db')
     c = conn.cursor()
     c.execute('SELECT id, email, isim, smtp_server, smtp_port FROM kullanicilar WHERE id = ?', (kullanici_id,))
     kullanici = c.fetchone()
@@ -1576,7 +1568,7 @@ def get_kullanici(kullanici_id):
 def get_urunler():
     kullanici_id = request.args.get('kullanici_id', type=int)
     
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect('stok.db')
     c = conn.cursor()
     
     if kullanici_id:
@@ -1684,7 +1676,7 @@ def add_urun():
             else:
                 urun_adi = 'Ürün'
         
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
@@ -1721,7 +1713,7 @@ def add_urun():
                     email_thread.start()
                     
                     # Veritabanını güncelle (bildirim gönderildi olarak işaretle)
-                    conn = sqlite3.connect(DATABASE_PATH)
+                    conn = sqlite3.connect('stok.db')
                     c = conn.cursor()
                     c.execute('UPDATE urunler SET bildirim_gonderildi = 1 WHERE id = ?', (urun_id,))
                     conn.commit()
@@ -1776,7 +1768,7 @@ def delete_urun(urun_id):
         # Kullanıcı ID kontrolü (güvenlik için)
         kullanici_id = request.args.get('kullanici_id', type=int)
         
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         
         # Önce ürünün var olup olmadığını ve kullanıcıya ait olup olmadığını kontrol et
@@ -1814,7 +1806,7 @@ def manual_stok_kontrol():
     
     if urun_id:
         # Tek ürün kontrolü
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         if kullanici_id:
             c.execute('SELECT urun_url, urun_adi, kullanici_id FROM urunler WHERE id = ? AND kullanici_id = ?', (urun_id, kullanici_id))
@@ -1830,7 +1822,7 @@ def manual_stok_kontrol():
         check_result = check_bershka_stock(urun_url)
         
         # Stok durumu değişti mi kontrol et ve bildirim gönder
-        conn = sqlite3.connect(DATABASE_PATH)
+        conn = sqlite3.connect('stok.db')
         c = conn.cursor()
         c.execute('SELECT stok_durumu, bildirim_gonderildi FROM urunler WHERE id = ?', (urun_id,))
         old_data = c.fetchone()
@@ -1858,7 +1850,7 @@ def manual_stok_kontrol():
     else:
         # Tüm ürünleri kontrol et (kullanıcı ID varsa sadece o kullanıcının ürünleri)
         if kullanici_id:
-            conn = sqlite3.connect(DATABASE_PATH)
+            conn = sqlite3.connect('stok.db')
             c = conn.cursor()
             c.execute('SELECT id, urun_url, urun_adi, stok_durumu, bildirim_gonderildi, kullanici_id, takip_edilen_beden FROM urunler WHERE kullanici_id = ?', (kullanici_id,))
             urunler = c.fetchall()
@@ -1870,7 +1862,7 @@ def manual_stok_kontrol():
                     print(f"  📦 Kontrol ediliyor: {urun_adi or urun_url}{beden_text}")
                     check_result = check_bershka_stock(urun_url, beden=beden)
                     if check_result.get('success'):
-                        conn = sqlite3.connect(DATABASE_PATH)
+                        conn = sqlite3.connect('stok.db')
                         c = conn.cursor()
                         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         
@@ -1912,12 +1904,8 @@ if __name__ == '__main__':
     start_all_monitoring()
     
     # Port'u environment variable'dan al (deploy için)
-    # Railway otomatik port atar, PORT env var'ını kullan
     port = int(os.getenv('PORT', 5001))
-    # Railway için 0.0.0.0 kullan (tüm interface'lere dinle)
-    host = os.getenv('HOST', '0.0.0.0')
-    # Production'da debug kapalı olmalı
-    debug = os.getenv('DEBUG', 'False').lower() == 'true'
+    host = os.getenv('HOST', '127.0.0.1')
+    debug = os.getenv('DEBUG', 'True').lower() == 'true'
     
-    print(f"🌐 Server başlatılıyor: {host}:{port} (Debug: {debug})")
     app.run(debug=debug, host=host, port=port, use_reloader=False)
