@@ -3,7 +3,9 @@ import axios from 'axios'
 import './App.css'
 
 // API URL - Production için environment variable'dan al
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
+// PythonAnywhere için: https://ranacetinkaya.pythonanywhere.com/api
+// Not: PythonAnywhere ücretsiz planda HTTP kullanır (HTTPS değil)
+const API_URL = import.meta.env.VITE_API_URL || 'https://ranacetinkaya.pythonanywhere.com/api'
 
 function App() {
   const [kullanici, setKullanici] = useState(null)
